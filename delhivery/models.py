@@ -4,18 +4,29 @@ from flask_login import UserMixin,current_user
 import mongoengine
 import datetime
 import uuid
-class FakeBookUser(Document,UserMixin):
+
+class DelhiveryHierarchy(Document):
+    name = StringField(required=True, max_length=128)
+    role = StringField(max_length=128, required=True)
+    features = ListField(StringField(max_length=128), default=[])
+
+    @classmethod
+    def get_choices(cls):
+        choices = []
+        roles = DelhiveryHierarchy.objects.all()
+        for role in roles:
+            choices.append((role.role, role.name))
+        return choices
+
+class DelhiveryUser(Document,UserMixin):
     email = StringField(max_length=128,required=True)
     password = StringField(max_length=128,required=True)
     first_name = StringField(max_length=20,required=True)
     image = StringField(max_length=128,default='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS942xv3bE55-_AwDA31FCNGhfWNDaAmmUXy3a3uxRwrV-lcZu6')
     last_name = StringField(max_length=20,required=True)
-    friends = ListField(ReferenceField('FakeBookUser',reverse_delete_rule=mongoengine.CASCADE))
-    sent_friend_requests = ListField(ReferenceField('FakeBookUser',reverse_delete_rule=mongoengine.CASCADE))
-    received_friend_requests = ListField(ReferenceField('FakeBookUser',reverse_delete_rule=mongoengine.CASCADE))
     chats = ListField(StringField())
     is_online = BooleanField(default=False)
-    
+    role = ReferenceField(DelhiveryHierarchy, reverse_delete_rule=mongoengine.CASCADE)
     def set_password(self,password):
         self.password = generate_password_hash(password,method='sha256')
     
@@ -76,13 +87,13 @@ class FakeBookUser(Document,UserMixin):
             'is_online': self.is_online
         }
 
-class FakebookNotification(Document):
+class DelhiveryNotification(Document):
     notification_type = StringField(max_length=20,required=True)
     is_read = BooleanField(default=False)
     read_at = DateTimeField()
     notification_message = StringField(max_length=128,required=True)
-    user_to_notify = ReferenceField(FakeBookUser,reverse_delete_rule=mongoengine.CASCADE)
-    initiated_by = ReferenceField(FakeBookUser,reverse_delete_rule=mongoengine.CASCADE)
+    user_to_notify = ReferenceField(DelhiveryUser,reverse_delete_rule=mongoengine.CASCADE)
+    initiated_by = ReferenceField(DelhiveryUser,reverse_delete_rule=mongoengine.CASCADE)
 
     def mark_as_read(self):
         self.is_read = True
@@ -109,10 +120,10 @@ class FakebookNotification(Document):
             'name': self.initiated_by.name
         }
 
-class FakeBookMessages(Document):
+class DelhiveryMessages(Document):
     message_text = StringField(max_length=1024,required=True)
-    sent_by = ReferenceField(FakeBookUser)
-    sent_to = ReferenceField(FakeBookUser)
+    sent_by = ReferenceField(DelhiveryUser)
+    sent_to = ReferenceField(DelhiveryUser)
     read_on = DateTimeField()
 
     def __str__(self):
@@ -132,12 +143,12 @@ class FakeBookMessages(Document):
             'sent_by_me': self.sent_by.id == current_user.id
         }
 
-class FakeBookChat(Document):
+class DelhiveryChat(Document):
     chat_id = StringField(required=True)
     chat_created_on = DateTimeField(default=datetime.datetime.now())
-    chat_initiated_by = ReferenceField(FakeBookUser)
-    chat_initiated_for = ReferenceField(FakeBookUser)
-    messages = ListField(ReferenceField(FakeBookMessages,reverse_delete_rule=mongoengine.CASCADE))
+    chat_initiated_by = ReferenceField(DelhiveryUser)
+    chat_initiated_for = ReferenceField(DelhiveryUser)
+    messages = ListField(ReferenceField(DelhiveryMessages,reverse_delete_rule=mongoengine.CASCADE))
 
     def __str__(self):
         return self.chat_id

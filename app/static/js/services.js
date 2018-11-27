@@ -1,4 +1,4 @@
-angular.module('fakebook').factory('socket', ['$rootScope', function($rootScope){
+angular.module('delhivery').factory('socket', ['$rootScope', function($rootScope){
     $rootScope.server_ip = 'http://23.101.143.33';  
   
     var socket = io.connect($rootScope.server_ip);

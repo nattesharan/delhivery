@@ -3,12 +3,12 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
-from fakebook.models import FakeBookUser
+from delhivery.models import DelhiveryUser
 from api.utils import get_notifications_for_dashboard
-from settings import MONGODB_SETTINGS
-import main_sockets
+from app.settings import MONGODB_SETTINGS
+import app.main_sockets as main_sockets
 app = Flask(__name__)
-app.secret_key = 'FAKEBOOKSECRET'
+app.secret_key = 'delhiverySECRET'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['MONGODB_SETTINGS'] = MONGODB_SETTINGS
 app.config['WTF_CSRF_SECRET_KEY']="SECRETCSRFKEY"
@@ -35,7 +35,7 @@ def refresh_online_friends(user_id):
 
 @login_manager.user_loader
 def loaduser(user_id):
-    user = FakeBookUser.objects.get(id=user_id)
+    user = DelhiveryUser.objects.get(id=user_id)
     return user
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -47,8 +47,8 @@ def page_not_found(e):
 def load_blueprints():
     from auth.views import auth_views
     app.register_blueprint(auth_views)
-    from fakebook.views import fakebook_views
-    app.register_blueprint(fakebook_views)
+    from delhivery.views import delhivery_views
+    app.register_blueprint(delhivery_views)
     from api.api import api_blueprint
     app.register_blueprint(api_blueprint)
 load_blueprints()

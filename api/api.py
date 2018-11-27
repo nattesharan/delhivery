@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_restful import Api
-from resources import FriendRequestHandler,DashboardNotificationsHandler,UserNotificationsHandler,\
+from api.resources import FriendRequestHandler,DashboardNotificationsHandler,UserNotificationsHandler,\
                         FriendsHandler,OnlineFriendsHandler,MessagesHandler
 api_blueprint = Blueprint('api',__name__)
 api = Api(api_blueprint)

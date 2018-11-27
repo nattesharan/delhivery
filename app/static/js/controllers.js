@@ -1,4 +1,4 @@
-angular.module('fakebook').controller('DashboardController', DashboardController);
+angular.module('delhivery').controller('DashboardController', DashboardController);
 
 DashboardController.$inject = ['$scope'];
 
@@ -10,10 +10,10 @@ function DashboardController($scope) {
     }
 }
 
-angular.module('fakebook').controller('FakebookController', FakebookController);
-FakebookController.$inject = ['$scope','socket'];
+angular.module('delhivery').controller('delhiveryController', delhiveryController);
+delhiveryController.$inject = ['$scope','socket'];
 
-function FakebookController($scope,socket) {
+function delhiveryController($scope,socket) {
     var vm = this;
     vm.establishConnection = establishConnection;
     function establishConnection(user_id) {
@@ -27,7 +27,7 @@ function FakebookController($scope,socket) {
     }
 }
 
-angular.module('fakebook').controller('NotificationController', NotificationController);
+angular.module('delhivery').controller('NotificationController', NotificationController);
 NotificationController.$inject = ['socket','$http'];
 function NotificationController(socket,$http) {
     var vm = this;
@@ -78,7 +78,7 @@ function NotificationController(socket,$http) {
         });
     });
 }
-angular.module('fakebook').controller('FindFriendsController', FindFriendsController);
+angular.module('delhivery').controller('FindFriendsController', FindFriendsController);
 FindFriendsController.$inject = ['$http','socket','Notification','$mdDialog'];
 
 function FindFriendsController($http,socket,Notification,$mdDialog){
@@ -197,7 +197,7 @@ function FindFriendsController($http,socket,Notification,$mdDialog){
     });
 }
 
-angular.module('fakebook').controller('UserNotificationsController', UserNotificationsController);
+angular.module('delhivery').controller('UserNotificationsController', UserNotificationsController);
 UserNotificationsController.$inject = ['$http','socket'];
 
 function UserNotificationsController($http,socket) {
@@ -230,7 +230,7 @@ function UserNotificationsController($http,socket) {
     }
 }
 
-angular.module('fakebook').controller('OnlineWindowController', OnlineWindowController);
+angular.module('delhivery').controller('OnlineWindowController', OnlineWindowController);
 OnlineWindowController.$inject = ['$http','socket'];
 
 function OnlineWindowController($http,socket) {

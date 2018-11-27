@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="fakebook">
+<html lang="en" ng-app="delhivery">
 <head>
 	<meta charset="utf-8" />
 	<link rel="icon" type="image/png" href="../static/assets/img/favicon.ico">
@@ -33,7 +33,7 @@
     <link href="../static/assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 
 </head>
-<body ng-controller="FakebookController as vm" ng-init="vm.establishConnection('{{ user.id }}')">
+<body ng-controller="delhiveryController as vm" ng-init="vm.establishConnection('{{ user.id }}')">
 
 <div class="wrapper">
     <div class="sidebar" data-color="purple" data-image="../static/assets/img/sidebar-5.jpg">
@@ -47,8 +47,8 @@
 
     	<div class="sidebar-wrapper">
             <div class="logo">
-                <a href="https://github.com/nattesharan/fakebook" target="blank" class="simple-text">
-                    Fakebook
+                <a href="https://github.com/nattesharan/delhivery" target="blank" class="simple-text">
+                    delhivery
                 </a>
             </div>
 
@@ -180,8 +180,8 @@
         </nav>
 
         <div class="main-body row col-md-12">
-            <div class="content col-md-8 fakebook-content">
-                    {% block fakebook_content %}
+            <div class="content col-md-8 delhivery-content">
+                    {% block delhivery_content %}
                     {% endblock %}
             </div>
             <div class="col-md-4 online-window" ng-controller="OnlineWindowController as vm" ng-init="vm.fetchOnlineUsers()">
@@ -325,7 +325,7 @@
                     </ul>
                 </nav>
                 <p class="copyright pull-right">
-                    &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://github.com/nattesharan/fakebook">Fakebook</a>, made with love for a better web
+                    &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://github.com/nattesharan/delhivery">delhivery</a>, made with love for a better web
                 </p>
             </div>
         </footer>
@@ -363,7 +363,7 @@
 	<script src="../static/assets/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
 
     <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
-    <script src="../static/js/fakebook.js"></script>
+    <script src="../static/js/delhivery.js"></script>
     <script src="../static/js/services.js"></script>
     <script src="../static/js/controllers.js"></script>
 	<script src="../static/assets/js/demo.js"></script>

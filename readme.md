@@ -1,4 +1,4 @@
-# Fakebook
+# delhivery
 
 Social website built with Flask,Angular,Mongodb and Socket Io
 
@@ -18,10 +18,10 @@ These instructions will get you a copy of the project up and running on your loc
 A step by step series of examples that tell you how to get a development env running
 
 ```
-git clone https://github.com/nattesharan/fakebook.git
-cd fakebook/
-virtualenv fakebook
-source fakebook/bin/activate
+git clone https://github.com/nattesharan/delhivery.git
+cd delhivery/
+virtualenv delhivery
+source delhivery/bin/activate
 pip install -r requirements.txt
 python manage.py dev
 check localhost:8080
@@ -29,7 +29,7 @@ check localhost:8080
 For running in production
 ```
 pip install gunicorn
-fakebook/bin/gunicorn -b :8080 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 main:app --reload
+delhivery/bin/gunicorn -b :8080 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 main:app --reload
 
 ```
 ### Sockets from frontend
