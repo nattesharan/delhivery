@@ -1,5 +1,5 @@
 angular.module('delhivery').factory('socket', ['$rootScope', function($rootScope){
-    $rootScope.server_ip = 'http://23.101.143.33';  
+    $rootScope.server_ip = 'http://localhost:8080';  
   
     var socket = io.connect($rootScope.server_ip);
     return {

@@ -22,7 +22,7 @@ def login():
             return render_template("delhivery.html", loginform=form,registrationform=RegistrationForm())
         if user and user.verify_password(form.loginpassword.data):
             login_user(user,remember=True)
-            return redirect(url_for('delhivery_views.home'))
+            return redirect(url_for('delhivery_views.index'))
         form.loginemail.errors.append("Email or password invalid")
     return render_template("delhivery.html", loginform=form,registrationform=RegistrationForm())
 

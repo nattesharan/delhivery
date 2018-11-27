@@ -27,6 +27,38 @@ function delhiveryController($scope,socket) {
     }
 }
 
+angular.module('delhivery').controller('TasksController', TasksController);
+TasksController.$inject = ['$http','Notification'];
+function TasksController($http,Notification) {
+    var vm = this;
+    vm.title = '';
+    vm.priorityOptions = ['High','Medium','Low'];
+    vm.priority = vm.priorityOptions[0];
+    vm.description = '';
+    vm.createTask = createTask;
+    function createTask() {
+        var data = {
+            'title': vm.title,
+            'description': vm.description,
+            'priority': vm.priority
+        }
+        $http({
+            method: 'POST',
+            url: '/api/tasks',
+            data: data
+        }).then(function result(response) {
+            vm.title = '';
+            vm.priority = vm.priorityOptions[0];
+            vm.description = '';
+            if(response.data.success) {
+                Notification.success({message: response.data.message, delay: 1000, positionY: 'bottom', positionX: 'right'});
+            }
+            else {
+                Notification.error({message: response.data.message, delay: 1000, positionY: 'bottom', positionX: 'right'});
+            }
+        });
+    }
+}
 angular.module('delhivery').controller('NotificationController', NotificationController);
 NotificationController.$inject = ['socket','$http'];
 function NotificationController(socket,$http) {

@@ -179,3 +179,22 @@ class DelhiveryChat(Document):
             return chat,True
         except DoesNotExist:
             return None,False
+
+class DelhiveryTask(Document):
+    title = StringField(required=True, max_length=256)
+    priority =  StringField(required=True,choices=('High','Medium', 'Low'))
+    state = StringField(required=True, choices=('New','Accepted','Completed','Declined', 'Cancelled'), default='New')
+    archieved = BooleanField(default=False)
+    description = StringField(required=True,max_length=512)
+    created_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE)
+    handled_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE)
+
+    @classmethod
+    def create_task(cls, data):
+        try:
+            task = cls(title=data['title'], priority=data['priority'], description=data['description'])
+            task.created_by = current_user.id
+            task.save()
+            return True
+        except:
+            return False

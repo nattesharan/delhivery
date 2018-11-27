@@ -3,6 +3,10 @@ from flask_login import login_required,current_user
 from delhivery.models import DelhiveryUser
 delhivery_views = Blueprint('delhivery_views',__name__,template_folder='templates')
 
+@delhivery_views.route('/home')
+@login_required
+def index():
+    return render_template('home.html', user=current_user)
 @delhivery_views.route('/dashboard')
 @login_required
 def home():

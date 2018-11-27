@@ -51,8 +51,13 @@
                     delhivery
                 </a>
             </div>
-
             <ul class="nav">
+                <li {% if 'home'== active_page %} class="active" {% endif %}>
+                    <a href="/home">
+                        <i class="pe-7s-global"></i>
+                        <p>Home</p>
+                    </a>
+                </li>
                 <li {% if 'dashboard'== active_page %} class="active" {% endif %}>
                     <a href="/dashboard">
                         <i class="pe-7s-graph"></i>
@@ -296,8 +301,7 @@
             </div>
         </div>
         
-
-
+        {% if 'home' != active_page %}
         <footer class="footer">
             <div class="container-fluid">
                 <nav class="pull-left">
@@ -329,7 +333,7 @@
                 </p>
             </div>
         </footer>
-
+        {% endif %}
     </div>
 </div>
 

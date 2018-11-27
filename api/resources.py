@@ -3,10 +3,25 @@ from flask import request,jsonify
 import requests
 from flask_login import login_required,current_user
 from app.settings import NOTIFICATION_TYPES
-from delhivery.models import DelhiveryUser,DelhiveryNotification,DelhiveryChat, DelhiveryMessages
+from delhivery.models import DelhiveryUser,DelhiveryNotification,DelhiveryChat, DelhiveryMessages, DelhiveryTask
 from api.utils import create_notification, get_notifications_for_dashboard, get_all_notifications,\
                         get_all_people,get_all_online_delivery_boys_json
 from app import notify_user,update_friends_list_for_receiver,refresh_online_friends
+
+class TasksResource(Resource):
+    @login_required
+    def post(self):
+        data = request.get_json()
+        success = DelhiveryTask.create_task(data)
+        if success:
+            return jsonify({
+                'success': success,
+                'message': 'Successfully created the task'
+            })
+        return jsonify({
+            'success': success,
+            'message': 'Error occured while creating the task'
+        })
 class FriendRequestHandler(Resource):
     @login_required
     def post(self):
