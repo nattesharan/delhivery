@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en" ng-app="fakebook">
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="../static/assets/img/favicon.ico">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Light Bootstrap Dashboard by Creative Tim</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+
+    <!-- Bootstrap core CSS     -->
+    <link href="../static/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../static/assets/css/bootstrap3.min.css" rel="stylesheet" id="bootstrap-css">
+    <!-- Animation library for notifications   -->
+    <link href="../static/assets/css/animate.min.css" rel="stylesheet"/>
+
+    <!--  Light Bootstrap Table core CSS    -->
+    <link href="../static/assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="../static/assets/css/angular-material.min.css"/>
+    <link rel="stylesheet" href="../static/assets/css/angular-ui-notification.min.css"/>
+    <link rel="stylesheet" href="../static/assets/css/bootstrap-glyph.min.css"/>
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="../static/assets/css/demo.css" rel="stylesheet" />
+    <link href="../static/css/chat_box.css" rel="stylesheet" />
+
+    <!--     Fonts and icons     -->
+    <link href="../static/assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+    <link href="../static/assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+
+</head>
+<body ng-controller="FakebookController as vm" ng-init="vm.establishConnection('{{ user.id }}')">
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="../static/assets/img/sidebar-5.jpg">
+
+    <!--
+
+        Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+        Tip 2: you can also add an image using data-image tag
+
+    -->
+
+    	<div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="https://github.com/nattesharan/fakebook" target="blank" class="simple-text">
+                    Fakebook
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li {% if 'dashboard'== active_page %} class="active" {% endif %}>
+                    <a href="/dashboard">
+                        <i class="pe-7s-graph"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li {% if 'profile'== active_page %} class="active" {% endif %}>
+                    <a href="/profile">
+                        <i class="pe-7s-user"></i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                <li {% if 'find_friends'== active_page %} class="active" {% endif %}>
+                    <a href="/find-friends">
+                        <i class="pe-7s-science"></i>
+                        <p>Find Friends</p>
+                    </a>
+                </li>
+                <li {% if 'tables'== active_page %} class="active" {% endif %}>
+                    <a href="/tables">
+                        <i class="pe-7s-note2"></i>
+                        <p>Table List</p>
+                    </a>
+                </li>
+                <li {% if 'user-notifications'== active_page %} class="active" {% endif %}>
+                    <a href="/notifications">
+                        <i class="pe-7s-news-paper"></i>
+                        <p>Notifications</p>
+                    </a>
+                </li>
+                <li {% if 'maps'== active_page %} class="active" {% endif %}>
+                    <a href="/maps">
+                        <i class="pe-7s-map-marker"></i>
+                        <p>Maps</p>
+                    </a>
+                </li>
+                <li {% if 'notifications'== active_page %} class="active" {% endif %}>
+                    <a href="/sample-notifications">
+                        <i class="pe-7s-bell"></i>
+                        <p>Notifications</p>
+                    </a>
+                </li>
+            </ul>
+    	</div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Dashboard</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-dashboard"></i>
+								<p class="hidden-lg hidden-md">Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="dropdown" ng-controller="NotificationController as vm" ng-init="vm.fetchNotifications()">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-click="vm.notificationsOpened()">
+                                    <i class="fa fa-globe"></i>
+                                    <b class="caret hidden-lg hidden-md"></b>
+                                    <span ng-if="vm.unreadNotifCount" class="notification hidden-sm hidden-xs" ng-bind="vm.unreadNotifCount"></span>
+									<p class="hidden-lg hidden-md">
+										<b class="caret"></b>
+									</p>
+                              </a>
+                              <ul ng-show="vm.notifications.length" class="dropdown-menu">
+                                  <li class="notif" ng-repeat="notification in vm.notifications" ng-class="(notification.is_read == false) ? 'notif-read' : ''"><a href='#'>[[ notification.message ]]</a></li>
+                                  <li><a class="default-show-all" href="/notifications"><center><u>Show all Notifications</u></center></a></li>
+                              </ul>
+                              <ul ng-hide="vm.notifications.length" class="dropdown-menu">
+                                <li><a class="default-class"><center>No Notifications</center></a></li>
+                              </ul>
+                        </li>
+                        <li>
+                           <a href="">
+                                <i class="fa fa-search"></i>
+								<p class="hidden-lg hidden-md">Search</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                           <a href="">
+                               <p>Account</p>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <p>
+										Dropdown
+										<b class="caret"></b>
+									</p>
+
+                              </a>
+                              <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                              </ul>
+                        </li>
+                        <li>
+                            <a href="/logout">
+                                <p>Log out</p>
+                            </a>
+                        </li>
+						<li class="separator hidden-lg"></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-body row col-md-12">
+            <div class="content col-md-8 fakebook-content">
+                    {% block fakebook_content %}
+                    {% endblock %}
+            </div>
+            <div class="col-md-4 online-window" ng-controller="OnlineWindowController as vm" ng-init="vm.fetchOnlineUsers()">
+                    <div class="card">
+        
+                        <div class="header">
+                            <h4 class="title">Online Users</h4>
+                            <p class="category">Refreshes automatically</p>
+                        </div>
+                        <div class="content">
+                            <md-content class="show-online-window">
+                                <md-list ng-show="vm.onlineUsers.length">
+                                    <md-list-item class="md-3-line online-user" ng-repeat="onlineUser in vm.onlineUsers" ng-click="vm.showChatWindow(onlineUser)">
+                                    <img ng-src="[[ onlineUser.image ]]" class="md-avatar" alt="">
+                                    <div class="md-list-item-text">
+                                        <h3>[[ onlineUser.name ]]&nbsp;&nbsp;<i class="fa fa-circle" ng-if="onlineUser.is_online" style="color:rgb(66, 183, 42)" aria-hidden="true"></i></h3>
+                                        <h4>[[ onlineUser.email ]]</h4>
+                                    </div>
+                                    <md-divider md-inset></md-divider>
+                                    </md-list-item>
+                                </md-list>
+                                <md-list ng-hide="vm.onlineUsers.length">
+                                    <center>
+                                        <h4 class="title">No Friends Online</h4>
+                                    </center>
+                                    <p class="category">We will notify you when your friends come online</p>
+                                </md-list>
+                            </md-content>
+                            <div class="footer">
+                                <hr>
+                                <div class="stats">
+                                    <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-box chat-popup" id="qnimate">
+                            <div class="popup-head">
+                                    <div class="popup-head-left pull-left">
+                                        <a href="#">
+                                        <img class="md-user-image" ng-src="[[ vm.chatUser.image ]]" alt="[[ vm.chatUser.name ]]">
+                                        <h1>[[ vm.chatUser.name ]]&nbsp;<i class="fa fa-circle" ng-if="vm.chatUser.is_online" style="color:rgb(66, 183, 42)" aria-hidden="true"></i></h1>
+                                        <small class="show-typing-status" ng-if="vm.senderTyping"><br><span aria-hidden="true"></span>typing</small>
+                                    </a>
+                                </div>
+                                        <div class="popup-head-right pull-right">
+                                                <div class="btn-group">
+                                                    <button class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
+                                                        <i class="glyphicon glyphicon-cog"></i>
+                                                    </button>
+                                                    <ul role="menu" class="dropdown-menu pull-right">
+                                                        <li>
+                                                            <a href="#">Media</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Block</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Clear Chat</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Email Chat</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <button ng-click="vm.closeChatWindow()" data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button">
+                                                    <i class="glyphicon glyphicon-off"></i>
+                                                </button>
+                                            </div>
+                                  </div>
+                            <div class="popup-messages chat-messages-container">
+                                    <div layout="row" layout-sm="column" layout-align="space-around" style="margin-bottom:30px" ng-show="vm.loadingMessages">
+                                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                                    </div>
+                                <div class="chat_box touchscroll chat_box_colors_a" id="chat-messages-div" ng-show="vm.messages.length">
+                                    <div class="chat_message_wrapper message-wrapper" ng-repeat="message in vm.messages" ng-class="(message.sent_by_me) ? 'chat_message_right' : ''">
+                                        <div class="chat_user_avatar">
+                                            <img ng-show="message.sent_by_me" ng-src="[[vm.me.image]]" class="md-user-image">
+                                            <img ng-hide="message.sent_by_me" ng-src="[[vm.chatUser.image]]" class="md-user-image">
+                                        </div>
+                                        <ul class="chat_message">
+                                            <li>
+                                                <p>[[ message.message ]]</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <center ng-show="vm.endOfPageMessages"><md-button class="md-raised message-wrapper" ng-disabled="true">End Of Conversation</md-button></center>
+                                    <center ng-hide="vm.endOfPageMessages"><md-button class="md-raised md-primary message-wrapper" ng-click="vm.loadMoreMessages()">Load More</md-button></center>
+                                </div>
+                                <div class="chat_box touchscroll chat_box_colors_a message-wrapper" style="padding:0" id="chat-messages-div" ng-hide="vm.messages.length || vm.loadingMessages">
+                                    <img style="min-width:99%;min-height:99%"src="data:image/png;base64,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"/>
+                                </div>
+                            </div>
+                            <div class="popup-messages-footer">
+                                    <textarea id="status_message message-area" ng-keydown="vm.typingMessage($event)" ng-model="vm.message" placeholder="Type a message..." rows="10" cols="40" name="message"></textarea>    
+                                <div class="btn-footer">
+                                    <button class="bg_none">
+                                        <i class="glyphicon glyphicon-film"></i>
+                                    </button>
+                                    <button class="bg_none">
+                                        <i class="glyphicon glyphicon-camera"></i>
+                                    </button>
+                                    <button class="bg_none">
+                                        <i class="glyphicon glyphicon-paperclip"></i>
+                                    </button>
+                                    <button class="bg_none pull-right">
+                                        <i class="glyphicon glyphicon-thumbs-up"></i>
+                                    </button>
+                                </div>
+                            </div>
+                    </div>
+            </div>
+        </div>
+        
+
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul>
+                        <li>
+                            <a href="#">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Company
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Portfolio
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                               Blog
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <p class="copyright pull-right">
+                    &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://github.com/nattesharan/fakebook">Fakebook</a>, made with love for a better web
+                </p>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+
+</body>
+
+    <!--   Core JS Files   -->
+    <script src="../static/assets/js/angular.min.js" type="text/javascript"></script>
+    <script src="../static/assets/js/angular-animate.min.js" type="text/javascript"></script>
+    <script src="../static/assets/js/angular-aria.min.js" type="text/javascript"></script>
+    <script src="../static/assets/js/angular-messages.min.js" type="text/javascript"></script>
+    <script src="../static/assets/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+    <script src="../static/js/socket.io.js" type="text/javascript"></script>
+    <script src="../static/assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../static/assets/js/angular-material.min.js" type="text/javascript"></script>
+    <script src="../static/assets/js/angular-ui-notification.min.js" type="text/javascript"></script>
+    <script src="../static/assets/js/ng-infinite-scroll.min.js" type="text/javascript"></script>
+    <script src="../static/assets/js/jquery-1.11.1.min.js"></script>
+    
+    <script src="../static/assets/js/bootstrap3.min.js"></script>
+	<!--  Charts Plugin -->
+	<script src="../static/assets/js/chartist.min.js"></script>
+
+    <!--  Notifications Plugin    -->
+    <script src="../static/assets/js/bootstrap-notify.js"></script>
+
+    <!--  Google Maps Plugin    -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+
+    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
+	<script src="../static/assets/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
+
+    <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
+    <script src="../static/js/fakebook.js"></script>
+    <script src="../static/js/services.js"></script>
+    <script src="../static/js/controllers.js"></script>
+	<script src="../static/assets/js/demo.js"></script>
+
+	<script type="text/javascript">
+    	$(document).ready(function(){
+            $(document).ready(function () {
+                $('.dropdown-toggle').dropdown();
+            });
+            demo.initChartist();
+        	$.notify({
+            	icon: 'pe-7s-gift',
+            	message: "Logged in as {{ user.first_name}}"
+
+            },{
+                type: 'info',
+                timer: 4000
+            });
+    	});
+	</script>
+
+</html>

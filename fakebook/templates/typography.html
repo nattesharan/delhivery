@@ -1,0 +1,38 @@
+{% extends 'fakebook_base.html' %} {% set active_page = 'user-notifications' %} {% block fakebook_content %}
+<div class="container-fluid notif-home" ng-controller="UserNotificationsController as vm" ng-init="vm.getAllUserNotifications()">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Notifications</h4>
+                    <p class="category">All notifications</p>
+                </div>
+                <md-content>
+                    <md-list infinite-scroll='vm.loadNextPageNotifications()' infinite-scroll-disabled='vm.busy'>
+                        <md-list-item class="md-3-line" ng-repeat="notification in vm.notifications">
+                        <img ng-src="[[notification.image]]" class="md-avatar" alt="">
+                        <div class="md-list-item-text">
+                            <h3>[[ notification.name ]]</h3>
+                            <p>[[ notification.message ]]</p>
+                        </div>
+                        </md-list-item>
+                        <div ng-show='vm.busy && !vm.endOfPage'>
+                                <div layout="row" layout-sm="column" layout-align="space-around" style="margin-bottom:30px">
+                                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                                </div>
+                            </div>
+                            <div ng-show="vm.endOfPage">
+                                    <div class="typo-line">
+                                        <center>
+                                            <h2>You have read all the Notifications</h2>
+                                        </center>
+                                    </div>
+                            </div>
+                    <md-list>                               
+                </md-content>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
