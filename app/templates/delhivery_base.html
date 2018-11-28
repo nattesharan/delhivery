@@ -68,7 +68,7 @@
                 <li {% if 'find_tasks'== active_page %} class="active" {% endif %}>
                     <a href="/find-tasks">
                         <i class="pe-7s-link"></i>
-                        <p>Find Taks</p>
+                        <p>Find Tasks</p>
                     </a>
                 </li>
                 {% endif %}
@@ -197,6 +197,7 @@
                     {% block delhivery_content %}
                     {% endblock %}
             </div>
+            {% if 'home' != active_page %}
             <div class="col-md-4 online-window" ng-controller="OnlineWindowController as vm" ng-init="vm.fetchOnlineUsers()">
                     <div class="card">
         
@@ -307,6 +308,7 @@
                             </div>
                     </div>
             </div>
+            {% endif %}
         </div>
         
         {% if 'home' != active_page %}

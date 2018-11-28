@@ -6,7 +6,8 @@ from app.settings import NOTIFICATION_TYPES
 from app.utils import feature_enable
 from delhivery.models import DelhiveryUser,DelhiveryNotification,DelhiveryChat, DelhiveryMessages, DelhiveryTask
 from api.utils import create_notification, get_notifications_for_dashboard, get_all_notifications,\
-                        get_all_people,get_all_online_delivery_boys_json, create_user_notifications
+                        get_all_people,get_all_online_delivery_boys_json, create_user_notifications, get_all_my_tasks,\
+                        get_all_my_pending_tasks
 from app import notify_user,update_friends_list_for_receiver,refresh_online_friends, refresh_tasks
 
 class TasksResourceStoreManager(Resource):
@@ -29,9 +30,20 @@ class TasksResourceDeliveryAgent(Resource):
     @feature_enable('features_view_high_priority_task')
     @feature_enable("features_view_high_priority_task")
     def get(self):
-        latest_tasks = DelhiveryTask.latest_tasks()
-        return latest_tasks
-    
+        me = request.args.get('me') == 'true'
+        if me:
+            my_tasks = get_all_my_tasks(current_user.id)
+            return my_tasks
+        else:
+            pending_tasks = get_all_my_pending_tasks(current_user.id)
+            if len(pending_tasks) >= 3:
+                return {
+                    'recommended_task': {},
+                    'available_tasks': [],
+                    'message': 'Maximum of three tasks are accepted by agent please complete and try fetching'
+                    }
+            latest_tasks = DelhiveryTask.latest_tasks()
+            return latest_tasks
     @login_required
     @feature_enable("features_accept_task")
     def put(self):

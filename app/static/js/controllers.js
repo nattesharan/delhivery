@@ -33,8 +33,10 @@ function TasksViewController($http, socket, $mdDialog) {
     var vm = this;
     vm.fetchNewTask = fetchNewTask
     vm.acceptTask = acceptTask;
+    vm.fetchMyTasks = fetchMyTasks;
     vm.task = {};
     vm.tasks = [];
+    vm.my_tasks = [];
     socket.on('refresh_tasks', function() {
         fetchNewTask();
     });
@@ -57,13 +59,30 @@ function TasksViewController($http, socket, $mdDialog) {
             })
         });
     }
+    function fetchMyTasks() {
+        $http({
+            'method': 'GET',
+            'url': '/api/deliveryagent/tasks',
+            'params': {
+                'me': true
+            }
+        }).then(function result(response) {
+            vm.my_tasks = response.data.tasks;
+        })
+    }
     function fetchNewTask() {
         $http({
             'method': 'GET',
-            'url': '/api/deliveryagent/tasks'
+            'url': '/api/deliveryagent/tasks',
+            'params': {
+                'me': false
+            }
         }).then(function result(response) {
             vm.task = response.data.recommended_task;
             vm.tasks = response.data.available_tasks;
+            if(!vm.tasks.length) {
+                vm.message = response.data.message;
+            }
         });
     }
 }

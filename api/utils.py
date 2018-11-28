@@ -1,4 +1,4 @@
-from delhivery.models import DelhiveryNotification,DelhiveryUser
+from delhivery.models import DelhiveryNotification,DelhiveryUser,DelhiveryTask
 from flask_login import current_user
 def create_notification(notif_type,notify_to):
     notification = DelhiveryNotification(notification_type=notif_type)
@@ -45,3 +45,14 @@ def get_all_online_delhivery_boys(user):
 def get_all_online_delivery_boys_json():
     online_users = get_all_online_delhivery_boys(current_user)
     return [user.online_json for user in online_users]
+
+def get_all_my_tasks(user_id):
+    tasks = DelhiveryTask.objects.filter(handled_by=user_id)
+    return {
+        'tasks': [task.json for task in tasks]
+    }
+
+def get_all_my_pending_tasks(user_id):
+    pending_status = ['Accepted']
+    pending_tasks = DelhiveryTask.objects.filter(handled_by=user_id, state__in=pending_status)
+    return pending_tasks

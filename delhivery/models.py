@@ -238,7 +238,7 @@ class DelhiveryTask(Document):
         }
     @classmethod
     def latest_tasks(cls):
-        tasks = cls.objects.filter(state='New',handled_by=None)
+        tasks = cls.objects.filter(state='New',handled_by=None,archieved=False)
         recommended_task = tasks.order_by('priority').first()
         if tasks:
             return {
@@ -248,5 +248,6 @@ class DelhiveryTask(Document):
         else:
             return {
                 'recommended_task': {},
-                'available_tasks': []
+                'available_tasks': [],
+                'message': 'No tasks available to Accept'
             }
