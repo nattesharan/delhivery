@@ -15,7 +15,18 @@
                             <input type="text" ng-value="vm.task.title">
                             <input type="text" ng-value="vm.task.priority">
                             <input type="text" ng-value="vm.task.created_by.name">
-                            <md-button class="md-raised md-primary add-friend">Accept</md-button>
+                            <md-menu>
+                            <md-button aria-label="Friends" class="md-accent md-raised md-hue-1" ng-click="$mdMenu.open()">
+                                Accept
+                            </md-button>
+                            <md-menu-content width="4" ng-mouseleave="$mdMenu.close()">
+                              <md-menu-item>
+                                <md-button ng-click="vm.acceptTask($event, vm.task.id, vm.task.title)">
+                                    Accept
+                                </md-button>
+                              </md-menu-item>
+                            </md-menu-content>
+                          </md-menu>
                             <input type="text" ng-value="vm.task.humanized_time">
                         </div>
                       </div>

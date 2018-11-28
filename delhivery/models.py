@@ -201,6 +201,9 @@ class DelhiveryTask(Document):
     created_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE)
     handled_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE, default=None)
 
+    def update_state(self, state):
+        self.state = state
+    
     @classmethod
     def create_task(cls, data):
         try:
@@ -215,6 +218,7 @@ class DelhiveryTask(Document):
         localtime = self.id.generation_time.replace(tzinfo=pytz.utc).astimezone(local_timezone)
         priorities = ['High','Medium','Low']
         return {
+            'id': str(self.id),
             'title': self.title,
             'priority': priorities[self.priority],
             'state': self.state,

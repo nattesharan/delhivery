@@ -13,6 +13,15 @@ def create_notification(notif_type,notify_to):
     notification.save()
     return notification
 
+def create_user_notifications(notif_type, task):
+    notification = DelhiveryNotification(notification_type=notif_type)
+    if notif_type == 'ACCEPTED_TASK':
+        notification.notification_message = '{} accepted by {}'.format(task.title,current_user.name)
+    notification.user_to_notify = task.created_by.id
+    notification.initiated_by = current_user.id
+    notification.save()
+    return notification
+
 def get_notifications_sorted_by_date(user_id):
     return DelhiveryNotification.objects.filter(user_to_notify=user_id).order_by('-id')
 

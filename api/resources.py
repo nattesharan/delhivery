@@ -6,8 +6,8 @@ from app.settings import NOTIFICATION_TYPES
 from app.utils import feature_enable
 from delhivery.models import DelhiveryUser,DelhiveryNotification,DelhiveryChat, DelhiveryMessages, DelhiveryTask
 from api.utils import create_notification, get_notifications_for_dashboard, get_all_notifications,\
-                        get_all_people,get_all_online_delivery_boys_json
-from app import notify_user,update_friends_list_for_receiver,refresh_online_friends
+                        get_all_people,get_all_online_delivery_boys_json, create_user_notifications
+from app import notify_user,update_friends_list_for_receiver,refresh_online_friends, refresh_tasks
 
 class TasksResourceStoreManager(Resource):
     @login_required
@@ -30,6 +30,18 @@ class TasksResourceDeliveryAgent(Resource):
     def get(self):
         latest_task = DelhiveryTask.latest_task()
         return latest_task
+    
+    @login_required
+    @feature_enable("features_accept_task")
+    def put(self):
+        data = request.get_json()
+        task = DelhiveryTask.objects.get(id=data['task_id'])
+        task.update_state('Accepted')
+        task.handled_by = current_user.id
+        task.save()
+        notification = create_user_notifications(NOTIFICATION_TYPES['ACCEPTED_TASK'], task)
+        refresh_tasks('DELIVERY_BOY')
+        notify_user(str(task.created_by.id))
 class FriendRequestHandler(Resource):
     @login_required
     def post(self):

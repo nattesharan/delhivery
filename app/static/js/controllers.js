@@ -28,17 +28,39 @@ function delhiveryController(socket) {
 }
 
 angular.module('delhivery').controller('TasksControllerDeliveryAgent', TasksViewController)
-TasksViewController.$inject = ['$http','socket']
-function TasksViewController($http, socket) {
+TasksViewController.$inject = ['$http','socket', '$mdDialog']
+function TasksViewController($http, socket, $mdDialog) {
     var vm = this;
     vm.fetchNewTask = fetchNewTask
+    vm.acceptTask = acceptTask;
     vm.task = {};
+    socket.on('refresh_tasks', function() {
+        fetchNewTask();
+    });
+    function acceptTask(event,task_id, task_title) {
+        var confirm = $mdDialog.confirm()
+          .title(`Would you really want to accept ${task_title}?`)
+          .textContent('This action cannot be reverted.')
+          .ariaLabel('confirmAccept')
+          .targetEvent(event)
+          .ok('Accept')
+          .cancel('Cancel');
+
+        $mdDialog.show(confirm).then(function() {
+            $http({
+                'method': 'PUT',
+                'url': '/api/deliveryagent/tasks',
+                'data': {
+                    'task_id': task_id
+                }
+            })
+        });
+    }
     function fetchNewTask() {
         $http({
             'method': 'GET',
             'url': '/api/deliveryagent/tasks'
         }).then(function result(response) {
-            console.log(response.data);
             vm.task = response.data;
         });
     }

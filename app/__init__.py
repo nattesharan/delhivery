@@ -33,6 +33,8 @@ def update_friends_list_for_receiver(user_id):
 def refresh_online_friends(user_id):
     socketio.emit('refresh_online_friends',room = user_id)
 
+def refresh_tasks(room):
+    socketio.emit('refresh_tasks', room=room)
 @login_manager.user_loader
 def loaduser(user_id):
     user = DelhiveryUser.objects.get(id=user_id)

@@ -28,6 +28,7 @@ def create_room(data):
     user.become_online()
     if user_id not in rooms():
         join_room(data['user_id'])
+        join_room(user.role.role)
     active_users = get_active_user_ids()
     online_friends = get_all_online_delhivery_boys(user)
     for friend in online_friends:
