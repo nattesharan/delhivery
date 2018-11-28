@@ -27,6 +27,39 @@ function delhiveryController(socket) {
     }
 }
 
+angular.module('delhivery').controller('ViewTaskController', ViewTaskController)
+ViewTaskController.$inject = ['$http','$mdDialog', 'Notification']
+function ViewTaskController($http, $mdDialog, Notification) {
+    var vm = this;
+    vm.showcancel = true;
+    vm.cancelTask = cancelTask;
+    function cancelTask(event, task_id, task_title) {
+        var confirm = $mdDialog.confirm()
+        .title(`Would you really want to accept ${task_title}?`)
+        .textContent('This action cannot be reverted.')
+        .ariaLabel('confirmCancel')
+        .targetEvent(event)
+        .ok('Yes, I understand')
+        .cancel('Close');
+        $mdDialog.show(confirm).then(function() {
+            $http({
+                'method': 'PUT',
+                'url': '/api/storemanager/tasks',
+                'data': {
+                    'task_id': task_id
+                }
+            }).then(function result(response) {
+                if(response.data.success) {
+                    Notification.success({message: response.data.message, delay: 1000, positionY: 'bottom', positionX: 'right'});
+                    vm.showcancel = false;
+                }
+                else {
+                    Notification.error({message: response.data.message, delay: 1000, positionY: 'bottom', positionX: 'right'});
+                }
+            });
+        });
+    }
+}
 angular.module('delhivery').controller('TasksControllerDeliveryAgent', TasksViewController)
 TasksViewController.$inject = ['$http','socket', '$mdDialog']
 function TasksViewController($http, socket, $mdDialog) {

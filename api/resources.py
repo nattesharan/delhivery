@@ -30,6 +30,25 @@ class TasksResourceStoreManager(Resource):
     def get(self):
         tasks = get_all_my_created_tasks(current_user.id)
         return tasks
+    
+    @login_required
+    @feature_enable('features_cancel_unaccepted_tasks')
+    def put(self):
+        data = request.get_json()
+        task = DelhiveryTask.objects.get(id=data['task_id'])
+        if task.state == 'New':
+            task.update_state('Cancelled')
+            task.archieved = True
+            task.save()
+            return {
+                'success': True,
+                'message': 'Successfully cancelled the task'
+            }
+        else:
+            return {
+                'success': False,
+                'message': 'Task is too ahead to cancel to cancel a task it must be in accepted state'
+            }
 class TasksResourceDeliveryAgent(Resource):
     @login_required
     @feature_enable('features_view_accepted_tasks')

@@ -1,7 +1,7 @@
 {% extends 'delhivery_base.html' %}
 {% set active_page = 'view_task' %}
 {% block delhivery_content %}
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="ViewTaskController as vm">
     <div class="row">
         <div class="col-md-12">
             <div class="card card-plain">
@@ -9,6 +9,11 @@
                     <center><h2 class="title"><u>{{ task.title }} State Transistion</u></h2></center>
                 </div>
                 <div class="content table-responsive table-full-width">
+                {% if task.state == 'New' %}
+                <div class="row" ng-show="vm.showcancel">
+                    <md-button style="float:right"class="md-raised md-warn" ng-click="vm.cancelTask($event,'{{ task.id }}', '{{ task.title }}')">Cancel</md-button>
+                </div>
+                {% endif %}
                     <table class="table table-hover">
                         <thead>
                             <th>State</th>
