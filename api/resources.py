@@ -18,6 +18,7 @@ class TasksResourceStoreManager(Resource):
         data = request.get_json()
         success = DelhiveryTask.create_task(data)
         if success:
+            refresh_tasks_delivery_agent('DELIVERY_BOY')
             return jsonify({
                 'success': success,
                 'message': 'Successfully created the task'
