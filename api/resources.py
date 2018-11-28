@@ -63,6 +63,7 @@ class TasksResourceDeliveryAgent(Resource):
             task.save()
             notification = create_user_notifications(NOTIFICATION_TYPES['COMPLETED_TASK'], task)
             notify_user(str(task.created_by.id))
+            refresh_store_manager_tasks(str(task.created_by.id))
             return {
                 'success': True,
                 'message': 'Successfully marked the task as completed'
