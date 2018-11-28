@@ -14,8 +14,20 @@ NOTIFICATION_TYPES = {
 }
 
 ROLES = [
-    {"name": 'Store Manager', 'role': 'STORE_MANAGER'},
-    {"name": 'Delivery Boy', 'role': 'DELIVERY_BOY'}
+    {"name": 'Store Manager', 'role': 'STORE_MANAGER', 'features':[ 
+        "features_create_tasks", 
+        "features_fetch_created_tasks", 
+        "features_see_state_transistions", 
+        "features_cancel_unaccepted_tasks"
+    ]},
+    {"name": 'Delivery Boy', 'role': 'DELIVERY_BOY', 'features':[ 
+        "features_view_high_priority_task", 
+        "features_accept_task", 
+        "features_view_accepted_tasks", 
+        "featutes_view_all_tasks", 
+        "features_complete_tasks", 
+        "features_decline_task"
+    ]}
 ]
 
 FEATURES = {
