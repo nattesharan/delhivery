@@ -1,0 +1,41 @@
+{% extends 'delhivery_base.html' %}
+{% set active_page = 'view_tasks' %}
+{% block delhivery_content %}
+<div class="container-fluid" ng-controller="TasksControllerStoreManager as vm" ng-init="vm.fetchMyTasks()">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-plain">
+                <div class="header">
+                    <center><h2 class="title"><u>Your Tasks</u></h2></center>
+                </div>
+                <div class="content table-responsive table-full-width" ng-show="vm.my_tasks.length">
+                    <table class="table table-hover">
+                        <thead>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Handled By</th>
+                            <th>Created On</th>
+                            <th>Priority</th>
+                            <th>State</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="task in vm.my_tasks" ng-click="vm.viewTimeline(task.id)">
+                                <td ng-bind="task.id"></td>
+                                <td ng-bind="task.title"></td>
+                                <td ng-bind="task.handled_by"></td>
+                                <td ng-bind="task.humanized_time"></td>
+                                <td ng-bind="task.priority"></td>
+                                <td ng-bind="task.state"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <center ng-hide="vm.my_tasks.length"><h3>No tasks to show</h3></center>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

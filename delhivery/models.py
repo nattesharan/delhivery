@@ -192,13 +192,22 @@ class DelhiveryChat(Document):
             return None,False
 class DelhiveryTaskTimeline(Document):
     state = StringField(required=True, choices=('New','Accepted','Completed','Declined', 'Cancelled'))
-
+    user_ref = ReferenceField(DelhiveryUser)
     @classmethod
-    def create_timeline_entry(cls, state):
-        timeline_entry = cls(state=state)
+    def create_timeline_entry(cls, state, user):
+        timeline_entry = cls(state=state,user_ref=user)
         timeline_entry.save()
         return timeline_entry.id
-
+    
+    @property
+    def json(self):
+        localtime = self.id.generation_time.replace(tzinfo=pytz.utc).astimezone(local_timezone)
+        return {
+            'state': self.state,
+            'time': self.id.generation_time.isoformat(),
+            'user': self.user_ref.name,
+            'humanize_time': humanize.naturaltime(localtime.replace(tzinfo=None))
+        }
 class DelhiveryTask(Document):
     title = StringField(required=True, max_length=256)
     # zero has the hishest priority
@@ -210,9 +219,12 @@ class DelhiveryTask(Document):
     created_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE)
     handled_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE, default=None)
 
+    @property
+    def state_timeline(self):
+        return [timeline_ref.json for timeline_ref in self.timeline]
     def update_state(self, state):
         self.state = state
-        self.timeline.append(DelhiveryTaskTimeline.create_timeline_entry(state))
+        self.timeline.append(DelhiveryTaskTimeline.create_timeline_entry(state, current_user.id))
     @classmethod
     def create_task(cls, data):
         try:
@@ -234,6 +246,7 @@ class DelhiveryTask(Document):
             'state': self.state,
             'created_by': self.created_by.json,
             'created_on': self.id.generation_time.isoformat(),
+            'handled_by': self.handled_by.name if self.handled_by else 'Not Accepted Yet',
             'humanized_time': humanize.naturaltime(localtime.replace(tzinfo=None))
         }
     @classmethod

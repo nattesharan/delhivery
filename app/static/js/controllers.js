@@ -87,14 +87,32 @@ function TasksViewController($http, socket, $mdDialog) {
     }
 }
 angular.module('delhivery').controller('TasksControllerStoreManager', TasksController);
-TasksController.$inject = ['$http','Notification'];
-function TasksController($http,Notification) {
+TasksController.$inject = ['$http','Notification','socket'];
+function TasksController($http,Notification, socket) {
     var vm = this;
     vm.title = '';
     vm.priorityOptions = ['High','Medium','Low'];
     vm.priority = 0;
     vm.description = '';
+    vm.my_tasks = [];
     vm.createTask = createTask;
+    vm.fetchMyTasks = fetchMyTasks;
+    vm.viewTimeline = viewTimeline;
+    socket.on('refresh_tasks_store_manager', function() {
+        fetchMyTasks();
+    });
+    function viewTimeline(task_id){
+        console.log('show timeline now')
+        window.location.href = `tasks/${task_id}`;
+    }
+    function fetchMyTasks() {
+        $http({
+            'method':'GET',
+            'url': '/api/storemanager/tasks'
+        }).then(function result(response) {
+            vm.my_tasks = response.data.tasks;
+        });
+    }
     function createTask() {
         var data = {
             'title': vm.title,
@@ -161,7 +179,6 @@ function NotificationController(socket,$http) {
     socket.on('received_friend_request',function(data) {
         vm.unreadNotifCount = 0;
         vm.notifications = data;
-        console.log(vm.notifications);
         vm.notifications.forEach(notification => {
             if(!notification.is_read) {
                 vm.unreadNotifCount += 1;

@@ -56,3 +56,9 @@ def get_all_my_pending_tasks(user_id):
     pending_status = ['Accepted']
     pending_tasks = DelhiveryTask.objects.filter(handled_by=user_id, state__in=pending_status)
     return pending_tasks
+
+def get_all_my_created_tasks(user_id):
+    tasks = DelhiveryTask.objects.filter(created_by=user_id)
+    return {
+        'tasks': [task.json for task in tasks]
+    }

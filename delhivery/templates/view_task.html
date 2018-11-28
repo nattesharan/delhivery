@@ -1,0 +1,38 @@
+{% extends 'delhivery_base.html' %}
+{% set active_page = 'view_task' %}
+{% block delhivery_content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-plain">
+                <div class="header">
+                    <center><h2 class="title"><u>{{ task.title }} State Transistion</u></h2></center>
+                </div>
+                <div class="content table-responsive table-full-width">
+                    <table class="table table-hover">
+                        <thead>
+                            <th>State</th>
+                            <th>Time</th>
+                            <th>Elapsed</th>
+                            <th>Delivery Agent</th>
+                        </thead>
+                        <tbody>
+                            {% for timeline_info in task.state_timeline %}
+                            <tr>
+                                <td>{{timeline_info['state'] }}</td>
+                                <td>{{ timeline_info['time'] }}</td>
+                                <td>{{ timeline_info['humanize_time']}}</td>
+                                <td>{{ timeline_info['user'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

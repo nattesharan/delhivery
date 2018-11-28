@@ -21,6 +21,10 @@ FEATURES = {
         'title': "Features for creating tasks",
         'enabled': True
     },
+    'features_fetch_created_tasks': {
+        'title': 'Features for fetching all the created tasks',
+        'enabled': True
+    },
     'featutes_view_all_tasks': {
         'title': "Features for viewing all tasks",
         'enabled': True

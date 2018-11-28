@@ -58,6 +58,14 @@
                         <p>Home</p>
                     </a>
                 </li>
+                {% if user.role.role == 'STORE_MANAGER'%}
+                    <li {% if 'view_tasks'== active_page %} class="active" {% endif %}>
+                    <a href="/view-tasks">
+                        <i class="pe-7s-note2"></i>
+                        <p>View Created Tasks</p>
+                    </a>
+                </li>
+                {% endif %}
                 <li {% if 'dashboard'== active_page %} class="active" {% endif %}>
                     <a href="/dashboard">
                         <i class="pe-7s-graph"></i>
@@ -197,7 +205,7 @@
                     {% block delhivery_content %}
                     {% endblock %}
             </div>
-            {% if 'home' != active_page %}
+            {% if active_page not in ['home', 'view_tasks', 'view_task'] %}
             <div class="col-md-4 online-window" ng-controller="OnlineWindowController as vm" ng-init="vm.fetchOnlineUsers()">
                     <div class="card">
         
