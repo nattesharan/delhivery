@@ -10,6 +10,9 @@ class DelhiveryHierarchy(Document):
     role = StringField(max_length=128, required=True)
     features = ListField(StringField(max_length=128), default=[])
 
+    def has_permission(self, feature):
+        return feature in self.features
+
     @classmethod
     def get_choices(cls):
         choices = []
@@ -41,6 +44,9 @@ class DelhiveryUser(Document,UserMixin):
         self.is_online = False
         self.save()
     
+    def is_allowed(self, feature):
+        return self.role.has_permission(feature)
+
     def get_current_user_status(self):
         if current_user in self.friends and self in current_user.friends:
             return 'Friends'

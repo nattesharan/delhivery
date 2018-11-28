@@ -47,11 +47,11 @@ function TasksController($http,Notification) {
             url: '/api/tasks',
             data: data
         }).then(function result(response) {
-            vm.title = '';
-            vm.priority = vm.priorityOptions[0];
-            vm.description = '';
             if(response.data.success) {
                 Notification.success({message: response.data.message, delay: 1000, positionY: 'bottom', positionX: 'right'});
+                vm.title = '';
+                vm.priority = vm.priorityOptions[0];
+                vm.description = '';
             }
             else {
                 Notification.error({message: response.data.message, delay: 1000, positionY: 'bottom', positionX: 'right'});
