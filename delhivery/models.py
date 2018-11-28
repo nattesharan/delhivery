@@ -190,6 +190,14 @@ class DelhiveryChat(Document):
             return chat,True
         except DoesNotExist:
             return None,False
+class DelhiveryTaskTimeline(Document):
+    state = StringField(required=True, choices=('New','Accepted','Completed','Declined', 'Cancelled'))
+
+    @classmethod
+    def create_timeline_entry(cls, state):
+        timeline_entry = cls(state=state)
+        timeline_entry.save()
+        return timeline_entry.id
 
 class DelhiveryTask(Document):
     title = StringField(required=True, max_length=256)
@@ -197,18 +205,20 @@ class DelhiveryTask(Document):
     priority =  IntField(required=True,choices=(0,1,2))
     state = StringField(required=True, choices=('New','Accepted','Completed','Declined', 'Cancelled'), default='New')
     archieved = BooleanField(default=False)
+    timeline = ListField(ReferenceField(DelhiveryTaskTimeline))
     description = StringField(required=True,max_length=512)
     created_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE)
     handled_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE, default=None)
 
     def update_state(self, state):
         self.state = state
-    
+        self.timeline.append(DelhiveryTaskTimeline.create_timeline_entry(state))
     @classmethod
     def create_task(cls, data):
         try:
             task = cls(title=data['title'], priority=data['priority'], description=data['description'])
             task.created_by = current_user.id
+            task.update_state('New')
             task.save()
             return True
         except:
