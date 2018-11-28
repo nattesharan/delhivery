@@ -40,23 +40,20 @@ def send_message(data):
     sender_id = get_id_from_rooms(sender_rooms)
     receiver = DelhiveryUser.objects.get(id=data['sent_to'])
     sender = DelhiveryUser.objects.get(id=sender_id)
-    if sender in receiver.friends and receiver in sender.friends:
-        chat = DelhiveryChat.get_or_create_chat(sender,receiver)
-        message = DelhiveryMessages.new_message(data['message'],sender,receiver)
-        chat.messages.insert(0,message)
-        chat.save()
-        if receiver.is_online:
-            emit('new_message',room=str(receiver.id))
-        emit('refresh_sender',room=str(sender.id))
-    else:
-        emit('not_friends',room=str(sender.id))
+    chat = DelhiveryChat.get_or_create_chat(sender,receiver)
+    message = DelhiveryMessages.new_message(data['message'],sender,receiver)
+    chat.messages.insert(0,message)
+    chat.save()
+    if receiver.is_online:
+        emit('new_message',room=str(receiver.id))
+    emit('refresh_sender',room=str(sender.id))
 
 def typing_message(data):
     typing_user_rooms = rooms()
     typing_user_id = get_id_from_rooms(typing_user_rooms)
     typing_user = DelhiveryUser.objects.get(id=typing_user_id)
     friend = DelhiveryUser.objects.get(id=data['friend'])
-    if friend in typing_user.friends and typing_user in friend.friends and friend.is_online:
+    if friend.is_online:
         emit('sender_is_typing',{'typing_user': str(typing_user_id)},room=str(friend.id))
 
 def no_longer_typing(data):
@@ -64,5 +61,5 @@ def no_longer_typing(data):
     typing_user_id = get_id_from_rooms(typing_user_rooms)
     typing_user = DelhiveryUser.objects.get(id=typing_user_id)
     friend = DelhiveryUser.objects.get(id=data['friend'])
-    if friend in typing_user.friends and typing_user in friend.friends and friend.is_online:
+    if friend.is_online:
         emit('sender_stopped_typing',{'typing_user': str(typing_user_id)},room=str(friend.id))

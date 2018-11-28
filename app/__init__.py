@@ -27,8 +27,6 @@ def notify_user(person_id):
     notifications = get_notifications_for_dashboard(person_id)
     socketio.emit('received_friend_request',notifications,room=person_id)
 
-def update_friends_list_for_receiver(user_id):
-    socketio.emit('update_people_list',room=user_id)
 
 def refresh_online_friends(user_id):
     socketio.emit('refresh_online_friends',room = user_id)

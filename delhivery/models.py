@@ -51,16 +51,6 @@ class DelhiveryUser(Document,UserMixin):
     def is_allowed(self, feature):
         return self.role.has_permission(feature)
 
-    def get_current_user_status(self):
-        if current_user in self.friends and self in current_user.friends:
-            return 'Friends'
-        elif current_user in self.received_friend_requests:
-            return 'Cancel'
-        elif self in current_user.received_friend_requests:
-            return 'Accept'
-        else:
-            return 'Add Friend'
-
     @classmethod
     def find_user(cls,email):
         try:

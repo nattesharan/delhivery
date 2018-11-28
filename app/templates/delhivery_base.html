@@ -66,12 +66,6 @@
                     </a>
                 </li>
                 {% endif %}
-                <li {% if 'dashboard'== active_page %} class="active" {% endif %}>
-                    <a href="/dashboard">
-                        <i class="pe-7s-graph"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
                 {% if user.role.role == 'DELIVERY_BOY'%}
                 <li {% if 'find_tasks'== active_page %} class="active" {% endif %}>
                     <a href="/find-tasks">
@@ -80,39 +74,9 @@
                     </a>
                 </li>
                 {% endif %}
-                <li {% if 'profile'== active_page %} class="active" {% endif %}>
-                    <a href="/profile">
-                        <i class="pe-7s-user"></i>
-                        <p>User Profile</p>
-                    </a>
-                </li>
-                <li {% if 'find_friends'== active_page %} class="active" {% endif %}>
-                    <a href="/find-friends">
-                        <i class="pe-7s-science"></i>
-                        <p>Find Friends</p>
-                    </a>
-                </li>
-                <li {% if 'tables'== active_page %} class="active" {% endif %}>
-                    <a href="/tables">
-                        <i class="pe-7s-note2"></i>
-                        <p>Table List</p>
-                    </a>
-                </li>
                 <li {% if 'user-notifications'== active_page %} class="active" {% endif %}>
                     <a href="/notifications">
                         <i class="pe-7s-news-paper"></i>
-                        <p>Notifications</p>
-                    </a>
-                </li>
-                <li {% if 'maps'== active_page %} class="active" {% endif %}>
-                    <a href="/maps">
-                        <i class="pe-7s-map-marker"></i>
-                        <p>Maps</p>
-                    </a>
-                </li>
-                <li {% if 'notifications'== active_page %} class="active" {% endif %}>
-                    <a href="/sample-notifications">
-                        <i class="pe-7s-bell"></i>
                         <p>Notifications</p>
                     </a>
                 </li>
@@ -136,7 +100,6 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-dashboard"></i>
 								<p class="hidden-lg hidden-md">Dashboard</p>
                             </a>
                         </li>
@@ -157,38 +120,9 @@
                                 <li><a class="default-class"><center>No Notifications</center></a></li>
                               </ul>
                         </li>
-                        <li>
-                           <a href="">
-                                <i class="fa fa-search"></i>
-								<p class="hidden-lg hidden-md">Search</p>
-                            </a>
-                        </li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
-                           <a href="">
-                               <p>Account</p>
-                            </a>
-                        </li>
-                        <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <p>
-										Dropdown
-										<b class="caret"></b>
-									</p>
-
-                              </a>
-                              <ul class="dropdown-menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
-                              </ul>
-                        </li>
                         <li>
                             <a href="/logout">
                                 <p>Log out</p>

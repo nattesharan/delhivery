@@ -9,7 +9,7 @@ auth_views = Blueprint('auth_views',__name__,template_folder='templates')
 @auth_views.route('/')
 def delhivery_index():
     if current_user.is_authenticated:
-        return redirect(url_for('delhivery_views.home'))
+        return redirect(url_for('delhivery_views.index'))
     return render_template("delhivery.html",loginform=LoginForm(), registrationform=RegistrationForm())
 
 @auth_views.route('/login',methods=['POST'])
