@@ -11,9 +11,9 @@ function DashboardController($scope) {
 }
 
 angular.module('delhivery').controller('delhiveryController', delhiveryController);
-delhiveryController.$inject = ['$scope','socket'];
+delhiveryController.$inject = ['socket'];
 
-function delhiveryController($scope,socket) {
+function delhiveryController(socket) {
     var vm = this;
     vm.establishConnection = establishConnection;
     function establishConnection(user_id) {
@@ -27,13 +27,29 @@ function delhiveryController($scope,socket) {
     }
 }
 
-angular.module('delhivery').controller('TasksController', TasksController);
+angular.module('delhivery').controller('TasksControllerDeliveryAgent', TasksViewController)
+TasksViewController.$inject = ['$http','socket']
+function TasksViewController($http, socket) {
+    var vm = this;
+    vm.fetchNewTask = fetchNewTask
+    vm.task = {};
+    function fetchNewTask() {
+        $http({
+            'method': 'GET',
+            'url': '/api/deliveryagent/tasks'
+        }).then(function result(response) {
+            console.log(response.data);
+            vm.task = response.data;
+        });
+    }
+}
+angular.module('delhivery').controller('TasksControllerStoreManager', TasksController);
 TasksController.$inject = ['$http','Notification'];
 function TasksController($http,Notification) {
     var vm = this;
     vm.title = '';
     vm.priorityOptions = ['High','Medium','Low'];
-    vm.priority = vm.priorityOptions[0];
+    vm.priority = 0;
     vm.description = '';
     vm.createTask = createTask;
     function createTask() {
@@ -44,7 +60,7 @@ function TasksController($http,Notification) {
         }
         $http({
             method: 'POST',
-            url: '/api/tasks',
+            url: '/api/storemanager/tasks',
             data: data
         }).then(function result(response) {
             if(response.data.success) {

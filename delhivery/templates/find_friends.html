@@ -14,6 +14,7 @@
                         <div class="font-icon-detail"><img class="person-image" ng-src="[[ person.image ]]">
                           <i class="fa fa-circle" ng-if="vm.active[person.id]" style="color:rgb(66, 183, 42)" aria-hidden="true"></i>
                           <input type="text" ng-value="person.name">
+                          <input type="text" ng-value="person.role">
                           <md-menu ng-if="person.status == 'Friends' ">
                             <md-button aria-label="Friends" class="md-accent md-raised md-hue-1" ng-click="$mdMenu.open()">
                                 [[ person.status ]]

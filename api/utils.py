@@ -26,7 +26,7 @@ def get_all_notifications(skip,limit):
     return [notification.notif_json for notification in user_notifications]
 
 def get_all_people():
-    people = DelhiveryUser.objects.filter(id__ne=current_user.id)
+    people = DelhiveryUser.objects.filter(role__ne=current_user.role)
     return [person.json for person in people]
 
 def get_all_online_delhivery_boys(user):

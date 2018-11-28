@@ -9,7 +9,7 @@ from api.utils import create_notification, get_notifications_for_dashboard, get_
                         get_all_people,get_all_online_delivery_boys_json
 from app import notify_user,update_friends_list_for_receiver,refresh_online_friends
 
-class TasksResource(Resource):
+class TasksResourceStoreManager(Resource):
     @login_required
     @feature_enable('features_create_tasks')
     def post(self):
@@ -24,6 +24,12 @@ class TasksResource(Resource):
             'success': success,
             'message': 'Error occured while creating the task'
         })
+class TasksResourceDeliveryAgent(Resource):
+    @login_required
+    @feature_enable('features_view_high_priority_task')
+    def get(self):
+        latest_task = DelhiveryTask.latest_task()
+        return latest_task
 class FriendRequestHandler(Resource):
     @login_required
     def post(self):

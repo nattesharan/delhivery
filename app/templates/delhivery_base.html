@@ -64,6 +64,14 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                {% if user.role.role == 'DELIVERY_BOY'%}
+                <li {% if 'find_tasks'== active_page %} class="active" {% endif %}>
+                    <a href="/find-tasks">
+                        <i class="pe-7s-link"></i>
+                        <p>Find Taks</p>
+                    </a>
+                </li>
+                {% endif %}
                 <li {% if 'profile'== active_page %} class="active" {% endif %}>
                     <a href="/profile">
                         <i class="pe-7s-user"></i>

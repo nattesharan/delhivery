@@ -2,7 +2,7 @@
 {% set active_page = 'home' %}
 {% block delhivery_content %}
 {% if user.role.role == 'STORE_MANAGER' %}
-<div class="container-fluid" ng-controller="TasksController as vm">
+<div class="container-fluid" ng-controller="TasksControllerStoreManager as vm">
     <div class="row">
         <div class="col-md-8">
             <div class="card">
@@ -28,7 +28,7 @@
                                     <md-input-container style="width:100%">
                                         <label>Priority</label>
                                         <md-select name="Priority" ng-model="vm.priority" required>
-                                            <md-option ng-value="option" ng-repeat="option in vm.priorityOptions">[[ option ]]</md-option>
+                                            <md-option ng-value="$index" ng-repeat="option in vm.priorityOptions">[[ option ]]</md-option>
                                         </md-select>
                                         </div>
                                     </md-input-container>

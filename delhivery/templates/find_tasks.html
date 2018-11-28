@@ -1,0 +1,27 @@
+{% extends 'delhivery_base.html' %}
+{% set active_page = 'find_tasks' %}
+{% block delhivery_content %}
+<div class="container-fluid" style="padding-left: 0;min-height:605px" ng-controller="TasksControllerDeliveryAgent as vm" ng-init="vm.fetchNewTask()">
+        <div class="col-md-8 dashboard-container">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Find Tasks</h4>
+                    <p class="category">We will help you find yor tasks with real time experience</p>
+                </div>
+                <div class="content all-icons">
+                    <div class="row">
+                      <div class="font-icon-list col-lg-3 col-md-4 col-sm-5 col-xs-7">
+                        <div class="font-icon-detail"><img class="person-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1uSa7sS4R35sjpTi1g7oPTmIbFtcpuE1yKI3t6dOTYwkjRnXG">
+                            <input type="text" ng-value="vm.task.title">
+                            <input type="text" ng-value="vm.task.priority">
+                            <input type="text" ng-value="vm.task.created_by.name">
+                            <md-button class="md-raised md-primary add-friend">Accept</md-button>
+                            <input type="text" ng-value="vm.task.humanized_time">
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

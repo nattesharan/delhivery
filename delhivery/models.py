@@ -1,10 +1,14 @@
 from werkzeug.security import generate_password_hash,check_password_hash
-from mongoengine import Document,StringField,DoesNotExist,ListField,BooleanField,ReferenceField,DateTimeField
+from mongoengine import Document,StringField,DoesNotExist,ListField,BooleanField,ReferenceField,DateTimeField, IntField
 from flask_login import UserMixin,current_user
 import mongoengine
 import datetime
+import humanize
 import uuid
+import pytz
+import tzlocal
 
+local_timezone = tzlocal.get_localzone()
 class DelhiveryHierarchy(Document):
     name = StringField(required=True, max_length=128)
     role = StringField(max_length=128, required=True)
@@ -74,7 +78,8 @@ class DelhiveryUser(Document,UserMixin):
             'id': str(self.id),
             'name': self.name,
             'image': self.image,
-            'status': self.get_current_user_status()
+            'role': self.role.name,
+            'status': 'Friends'
         }
     @property
     def my_json(self):
@@ -188,12 +193,13 @@ class DelhiveryChat(Document):
 
 class DelhiveryTask(Document):
     title = StringField(required=True, max_length=256)
-    priority =  StringField(required=True,choices=('High','Medium', 'Low'))
+    # zero has the hishest priority
+    priority =  IntField(required=True,choices=(0,1,2))
     state = StringField(required=True, choices=('New','Accepted','Completed','Declined', 'Cancelled'), default='New')
     archieved = BooleanField(default=False)
     description = StringField(required=True,max_length=512)
     created_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE)
-    handled_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE)
+    handled_by = ReferenceField(DelhiveryUser, reverse_delete_rule=mongoengine.CASCADE, default=None)
 
     @classmethod
     def create_task(cls, data):
@@ -204,3 +210,19 @@ class DelhiveryTask(Document):
             return True
         except:
             return False
+    @property
+    def json(self):
+        localtime = self.id.generation_time.replace(tzinfo=pytz.utc).astimezone(local_timezone)
+        priorities = ['High','Medium','Low']
+        return {
+            'title': self.title,
+            'priority': priorities[self.priority],
+            'state': self.state,
+            'created_by': self.created_by.json,
+            'created_on': self.id.generation_time.isoformat(),
+            'humanized_time': humanize.naturaltime(localtime.replace(tzinfo=None))
+        }
+    @classmethod
+    def latest_task(cls):
+        task = cls.objects.filter(state='New',handled_by=None).order_by('priority').first()
+        return task.json

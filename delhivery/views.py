@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required,current_user
 from delhivery.models import DelhiveryUser
 delhivery_views = Blueprint('delhivery_views',__name__,template_folder='templates')
@@ -27,6 +27,12 @@ def tables():
 def typography():
     return render_template('typography.html',user=current_user)
 
+@delhivery_views.route('/find-tasks')
+@login_required
+def find_tasks():
+    if current_user.role.role == 'DELIVERY_BOY':
+        return render_template('find_tasks.html', user=current_user)
+    return redirect(url_for('index'))
 @delhivery_views.route('/find-friends')
 @login_required
 def icons():
