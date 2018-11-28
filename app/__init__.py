@@ -38,6 +38,10 @@ def refresh_tasks_delivery_agent(room):
 
 def refresh_store_manager_tasks(room):
     socketio.emit('refresh_tasks_store_manager', room=room)
+
+def hard_notify_user(room, message):
+    socketio.emit('hard_notify_users', data={'message': message}, room=room)
+
 @login_manager.user_loader
 def loaduser(user_id):
     user = DelhiveryUser.objects.get(id=user_id)

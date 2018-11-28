@@ -8,7 +8,8 @@ from delhivery.models import DelhiveryUser,DelhiveryNotification,DelhiveryChat, 
 from api.utils import create_notification, get_notifications_for_dashboard, get_all_notifications,\
                         get_all_people,get_all_online_delivery_boys_json, create_user_notifications, get_all_my_tasks,\
                         get_all_my_pending_tasks, get_all_my_created_tasks
-from app import notify_user,update_friends_list_for_receiver,refresh_online_friends, refresh_tasks_delivery_agent, refresh_store_manager_tasks
+from app import notify_user,update_friends_list_for_receiver,refresh_online_friends, refresh_tasks_delivery_agent,\
+                refresh_store_manager_tasks, hard_notify_user
 
 class TasksResourceStoreManager(Resource):
     @login_required
@@ -50,6 +51,35 @@ class TasksResourceStoreManager(Resource):
                 'message': 'Task is too ahead to cancel to cancel a task it must be in accepted state'
             }
 class TasksResourceDeliveryAgent(Resource):
+
+    @login_required
+    @feature_enable('features_complete_tasks')
+    @feature_enable('features_decline_task')
+    def post(self):
+        data = request.get_json()
+        task = DelhiveryTask.objects.get(id=data['task_id'], state='Accepted')
+        if data['action_type'] == 'completed':
+            task.update_state('Completed')
+            task.save()
+            notification = create_user_notifications(NOTIFICATION_TYPES['COMPLETED_TASK'], task)
+            notify_user(str(task.created_by.id))
+            return {
+                'success': True,
+                'message': 'Successfully marked the task as completed'
+            }
+        if data['action_type'] == 'declined':
+            task.update_state('Declined')
+            task.update_state('New')
+            task.save()
+            notification = create_user_notifications(NOTIFICATION_TYPES['DECLINED_TASK'], task)
+            notify_user(str(task.created_by.id))
+            refresh_store_manager_tasks(str(task.created_by.id))
+            hard_notify_user(str(task.created_by.id), notification.notification_message )
+            return {
+                'success': True,
+                'message': 'Successfully declined the task'
+            }
+
     @login_required
     @feature_enable('features_view_accepted_tasks')
     @feature_enable('featutes_view_all_tasks')

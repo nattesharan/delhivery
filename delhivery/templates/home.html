@@ -71,6 +71,7 @@
                             <th>Created By</th>
                             <th>Created On</th>
                             <th>Priority</th>
+                            <th>Action</th>
                         </thead>
                         <tbody>
                             <tr ng-repeat="task in vm.my_tasks">
@@ -79,6 +80,10 @@
                                 <td ng-bind="task.created_by.name"></td>
                                 <td ng-bind="task.humanized_time"></td>
                                 <td ng-bind="task.priority"></td>
+                                <td>
+                                <span><md-button class="md-raised md-primary" ng-click="vm.submitAction('completed',task.id)">Complete</md-button></span>
+                                <span><md-button class="md-raised md-warn" ng-click="vm.submitAction('declined',task.id)">Decline</md-button></span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

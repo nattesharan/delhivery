@@ -11,9 +11,9 @@ function DashboardController($scope) {
 }
 
 angular.module('delhivery').controller('delhiveryController', delhiveryController);
-delhiveryController.$inject = ['socket'];
+delhiveryController.$inject = ['socket', 'Notification'];
 
-function delhiveryController(socket) {
+function delhiveryController(socket, Notification) {
     var vm = this;
     vm.establishConnection = establishConnection;
     function establishConnection(user_id) {
@@ -24,6 +24,9 @@ function delhiveryController(socket) {
         socket.on('disconnect',function() {
             console.log("disconnected");
         });
+        socket.on('hard_notify_users', function(data) {
+            Notification.error({message: data.message, delay: 1000, positionY: 'bottom', positionX: 'right'});
+        })
     }
 }
 
@@ -61,12 +64,13 @@ function ViewTaskController($http, $mdDialog, Notification) {
     }
 }
 angular.module('delhivery').controller('TasksControllerDeliveryAgent', TasksViewController)
-TasksViewController.$inject = ['$http','socket', '$mdDialog']
-function TasksViewController($http, socket, $mdDialog) {
+TasksViewController.$inject = ['$http','socket', '$mdDialog', 'Notification']
+function TasksViewController($http, socket, $mdDialog, Notification) {
     var vm = this;
     vm.fetchNewTask = fetchNewTask
     vm.acceptTask = acceptTask;
     vm.fetchMyTasks = fetchMyTasks;
+    vm.submitAction = submitAction;
     vm.task = {};
     vm.tasks = [];
     vm.my_tasks = [];
@@ -91,6 +95,21 @@ function TasksViewController($http, socket, $mdDialog) {
                 }
             })
         });
+    }
+    function submitAction(action_type, task_id) {
+        $http({
+            'method': 'POST',
+            'url': '/api/deliveryagent/tasks',
+            'data': {
+                'action_type': action_type,
+                'task_id': task_id
+            }
+        }).then(function result(response) {
+            if(response.data.success) {
+                Notification.success({message: response.data.message, delay: 1000, positionY: 'bottom', positionX: 'right'});
+                fetchMyTasks();
+            }
+        })
     }
     function fetchMyTasks() {
         $http({

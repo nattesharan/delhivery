@@ -6,6 +6,8 @@ MONGODB_SETTINGS = {
 
 NOTIFICATION_TYPES = {
     'ACCEPTED_TASK': 'ACCEPTED_TASK',
+    'COMPLETED_TASK': 'COMPLETED_TASK',
+    'DECLINED_TASK': 'DECLINED_TASK',
     'FRIENDLY': 'FRIEND_REQUEST',
     'CANCEL_REQUEST': 'CANCEL_REQUEST',
     'ACCEPT_REQUEST': 'ACCEPT_REQUEST'
@@ -51,6 +53,10 @@ FEATURES = {
     },
     'features_accept_task': {
         'title': "Features to accept task",
+        'enabled': True
+    },
+    'features_decline_task': {
+        'title': "Features to deline task",
         'enabled': True
     }
 }

@@ -17,6 +17,10 @@ def create_user_notifications(notif_type, task):
     notification = DelhiveryNotification(notification_type=notif_type)
     if notif_type == 'ACCEPTED_TASK':
         notification.notification_message = '{} accepted by {}'.format(task.title,current_user.name)
+    if notif_type == 'COMPLETED_TASK':
+        notification.notification_message = '{} completed by {}'.format(task.title, current_user.name)
+    if notif_type == 'DECLINED_TASK':
+        notification.notification_message = '{} declined by {}'.format(task.title, current_user.name)
     notification.user_to_notify = task.created_by.id
     notification.initiated_by = current_user.id
     notification.save()
@@ -47,7 +51,7 @@ def get_all_online_delivery_boys_json():
     return [user.online_json for user in online_users]
 
 def get_all_my_tasks(user_id):
-    tasks = DelhiveryTask.objects.filter(handled_by=user_id)
+    tasks = DelhiveryTask.objects.filter(handled_by=user_id,state='Accepted')
     return {
         'tasks': [task.json for task in tasks]
     }
