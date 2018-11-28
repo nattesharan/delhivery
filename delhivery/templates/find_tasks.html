@@ -3,11 +3,12 @@
 {% block delhivery_content %}
 <div class="container-fluid" style="padding-left: 0;min-height:605px" ng-controller="TasksControllerDeliveryAgent as vm" ng-init="vm.fetchNewTask()">
         <div class="col-md-8 dashboard-container">
-            <div class="card">
+            <div class="card" ng-if="vm.tasks.length > 0">
                 <div class="header">
                     <h4 class="title">Find Tasks</h4>
                     <p class="category">We will help you find yor tasks with real time experience</p>
                 </div>
+                <center><h3>Recommended Tasks</h3></center>
                 <div class="content all-icons">
                     <div class="row">
                       <div class="font-icon-list col-lg-3 col-md-4 col-sm-5 col-xs-7">
@@ -32,7 +33,33 @@
                       </div>
                     </div>
                 </div>
+                <center><h3>Available Tasks</h3></center>
+                <div class="content all-icons">
+                    <div class="row">
+                      <div class="font-icon-list col-lg-3 col-md-4 col-sm-5 col-xs-7" ng-repeat="task in vm.tasks">
+                         <div class="font-icon-detail"><img class="person-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1uSa7sS4R35sjpTi1g7oPTmIbFtcpuE1yKI3t6dOTYwkjRnXG">
+                            <input type="text" ng-value="task.title">
+                            <input type="text" ng-value="task.priority">
+                            <input type="text" ng-value="task.created_by.name">
+                            <md-menu>
+                            <md-button aria-label="Friends" class="md-accent md-raised md-hue-1" ng-click="$mdMenu.open()">
+                                Accept
+                            </md-button>
+                            <md-menu-content width="4" ng-mouseleave="$mdMenu.close()">
+                              <md-menu-item>
+                                <md-button ng-click="vm.acceptTask($event, task.id, task.title)">
+                                    Accept
+                                </md-button>
+                              </md-menu-item>
+                            </md-menu-content>
+                          </md-menu>
+                            <input type="text" ng-value="task.humanized_time">
+                        </div>
+                      </div>
+                    </div>
+                </div>
             </div>
+            <h1 ng-if="vm.tasks.length === 0">No tasks available to Accept</h1>
         </div>
 </div>
 {% endblock %}

@@ -34,6 +34,7 @@ function TasksViewController($http, socket, $mdDialog) {
     vm.fetchNewTask = fetchNewTask
     vm.acceptTask = acceptTask;
     vm.task = {};
+    vm.tasks = [];
     socket.on('refresh_tasks', function() {
         fetchNewTask();
     });
@@ -61,7 +62,8 @@ function TasksViewController($http, socket, $mdDialog) {
             'method': 'GET',
             'url': '/api/deliveryagent/tasks'
         }).then(function result(response) {
-            vm.task = response.data;
+            vm.task = response.data.recommended_task;
+            vm.tasks = response.data.available_tasks;
         });
     }
 }

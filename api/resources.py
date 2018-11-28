@@ -27,9 +27,10 @@ class TasksResourceStoreManager(Resource):
 class TasksResourceDeliveryAgent(Resource):
     @login_required
     @feature_enable('features_view_high_priority_task')
+    @feature_enable("features_view_high_priority_task")
     def get(self):
-        latest_task = DelhiveryTask.latest_task()
-        return latest_task
+        latest_tasks = DelhiveryTask.latest_tasks()
+        return latest_tasks
     
     @login_required
     @feature_enable("features_accept_task")

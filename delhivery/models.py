@@ -227,6 +227,16 @@ class DelhiveryTask(Document):
             'humanized_time': humanize.naturaltime(localtime.replace(tzinfo=None))
         }
     @classmethod
-    def latest_task(cls):
-        task = cls.objects.filter(state='New',handled_by=None).order_by('priority').first()
-        return task.json
+    def latest_tasks(cls):
+        tasks = cls.objects.filter(state='New',handled_by=None)
+        recommended_task = tasks.order_by('priority').first()
+        if tasks:
+            return {
+                'recommended_task': recommended_task.json,
+                'available_tasks': [task.json for task in tasks]
+            }
+        else:
+            return {
+                'recommended_task': {},
+                'available_tasks': []
+            }
