@@ -1,0 +1,27 @@
+version: '3.0'
+
+services:
+  db:
+    image: mongo:3.2.21
+    restart: always
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+  redis:
+    image: redis:4-alpine
+    restart: always
+    ports:
+      - 6379:6379
+  webapp:
+    build: .
+    command: python manage.py dev
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+      - redis
+    links:
+      - db
+      - redis
